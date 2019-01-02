@@ -34,6 +34,7 @@ unwantedUsers=`echo  ${authUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort | u
 
 for i in `echo $unwantedUsers`
 do
-   userdel "$i"
+	$i = "$(echo -e "${i}" | tr -d '[:space:]')"
+     	userdel "$i"
 done
 
