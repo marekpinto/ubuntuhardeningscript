@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]
+then
+  echo "You must be root to run this script."
+  exit 1
+fi
+
+echo "Welcome to Team Morpheus' CyberPatriot XI Ubuntu 16 Script. This script can only be used by Team Morpheus."
+echo "Please Make sure that you have done the following before running this script:"
+echo "1) Read the README THOROUGHLY"
+echo "2) Read ALL Forensics Questions"
+read -p "<Press Enter To Start The Script>"
+
+echo "Please Copy Paste the list of Authorized Users from the ReadME (Hit Ctrl-D when finished)"
+while read line
+do
+    authUsers=("${authUsers[@]}" $line)
+done
+
+currentUsers=`awk -F'[/:]' '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd`
+userArr=($currentUsers)
+
+echo "Please copy/paste the list of Authorized Admin from the ReadME Line By Line (Hit Ctrl-D when finished)"
+
+while read line
+do
+	authAdmins=("${authAdmins[@]}" $line)
+done
+
+authUsers=( "${authUsers[@]}" "${authAdmins[@]}" )
+
+unwantedUsers=`echo  ${authUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort | uniq -u`
+
+for i in `echo $unwantedUsers`
+do
+   userdel "$i"
+done
+
