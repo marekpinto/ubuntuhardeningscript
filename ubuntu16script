@@ -28,13 +28,32 @@ do
 	authAdmins=("${authAdmins[@]}" $line)
 done
 
-authUsers=( "${authUsers[@]}" "${authAdmins[@]}" )
+allAuthUsers=( "${authUsers[@]}" "${authAdmins[@]}" )
 
-unwantedUsers=`echo  ${authUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort | uniq -u`
+unwantedUsers=`echo  ${allAuthUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort | uniq -u`
 
 for i in `echo $unwantedUsers`
 do
-	$i = "$(echo -e "${i}" | tr -d '[:space:]')"
-     	userdel "$i"
+	while true; do
+     	read -p "Would you like to delete user $i? [y/n]" yn
+	case $yn in
+		[Yy]* ) userdel "$i"; break;;
+		[Nn]* ) break;;
+		* ) echo "Please answer y or n only.";;
+	esac
 done
+	
+done
+
+echo "CAUTION: This script only deletes unauthorized users. You must add any authorized users not currently on the system."
+
+for i in "$authAdmins"
+do
+	usermod -aG sudo $i
+done
+for i in "$authUsers"
+do
+	gpasswd -d $i sudo
+done
+
 
