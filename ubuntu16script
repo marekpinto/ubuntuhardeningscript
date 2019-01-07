@@ -34,6 +34,7 @@ unwantedUsers=`echo  ${allAuthUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort 
 
 for i in `echo $unwantedUsers`
 do
+	if [ $(contains "${currentUsers[@]}" "$i") == "y" ]; then
 	while true; do
      	read -p "Would you like to delete user $i? [y/n]" yn
 	case $yn in
@@ -42,10 +43,17 @@ do
 		* ) echo "Please answer y or n only.";;
 	esac
 done
-	
+else
+	while true; do
+	read -p "Would you like to add user $i? [y/n]" yn
+	case $yn in 
+		[Yy]* ) useradd "$i"; chage -d 0 "$i";;
+		[Nn]* ) break;;
+		* ) echo "Please answer y or n only.";;
+	esac
 done
-
-echo "CAUTION: This script only deletes unauthorized users. You must add any authorized users not currently on the system."
+fi
+done
 
 for i in "$authAdmins"
 do
@@ -56,4 +64,17 @@ do
 	gpasswd -d $i sudo
 done
 
+echo "CAUTION: Make sure to not delete the autologin user if you don't have to."
+echo "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
 
+for i in "$allAuthUsers"
+do
+	while true; do
+		read -p "Would you like to change the password of user $i? [y/n]" yn
+		case $yn in
+			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd;;
+			[Nn]* ) break;;
+			* ) echo "Please answer y or n only.";;
+		esac
+	done
+done
