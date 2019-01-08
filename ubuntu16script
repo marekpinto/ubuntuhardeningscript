@@ -34,7 +34,7 @@ unwantedUsers=`echo  ${allAuthUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort 
 
 for i in `echo $unwantedUsers`
 do
-	if [ $(contains "${currentUsers[@]}" "$i") == "y" ]; then
+	if [[ " ${currentUsers[@]} " =~ " $i " ]]; then
 	while true; do
      	read -p "Would you like to delete user $i? [y/n]" yn
 	case $yn in
