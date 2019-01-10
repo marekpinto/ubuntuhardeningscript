@@ -69,7 +69,7 @@ done
 echo "CAUTION: Make sure to not delete the autologin user if you don't have to."
 echo "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
 
-for i in "$allAuthUsers"
+for i in `echo $allAuthUsers`
 do
 	while true; do
 		read -p "Would you like to change the password of user $i? [y/n]" yn
