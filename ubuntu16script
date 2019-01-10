@@ -36,7 +36,7 @@ for i in `echo $unwantedUsers`
 do
 	isUser=false
 	case "${currentUsers[@]}" in  *"$i"*) isUser=true ;; esac
-	if ["$isUser" = true]; then
+	if [ "$isUser" = true ]; then
 	while true; do
      	read -p "Would you like to delete user $i? [y/n]" yn
 	case $yn in
@@ -49,7 +49,7 @@ else
 	while true; do
 	read -p "Would you like to add user $i? [y/n]" yn
 	case $yn in 
-		[Yy]* ) useradd "$i"; chage -d 0 "$i";;
+		[Yy]* ) useradd "$i"; chage -d 0 "$i"; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
@@ -74,7 +74,7 @@ do
 	while true; do
 		read -p "Would you like to change the password of user $i? [y/n]" yn
 		case $yn in
-			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd;;
+			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; break;;
 			[Nn]* ) break;;
 			* ) echo "Please answer y or n only.";;
 		esac
