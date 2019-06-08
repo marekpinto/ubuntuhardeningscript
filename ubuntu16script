@@ -6,11 +6,29 @@ then
   exit 1
 fi
 
-echo "Welcome to Team Morpheus' CyberPatriot XI Ubuntu 16 Script. This script can only be used by Team Morpheus."
-echo "Please Make sure that you have done the following before running this script:"
-echo "1) Read the README THOROUGHLY"
-echo "2) Read ALL Forensics Questions"
+log()
+{
+	echo -e "$1"
+	echo -e "$1" >> ~/Desktop/Script.log
+}
+
+
+echo > ~/Desktop/Script.log
+chmod 777 ~/Desktop/Script.log
+
+log "Welcome to Team Morpheus' CyberPatriot XI Ubuntu 16 Script. This script can only be used by Team Morpheus."
+log "Please Make sure that you have done the following before running this script:"
+log "1) Read the README THOROUGHLY"
+log "2) Read ALL Forensics Questions"
 read -p "<Press Enter To Start The Script>"
+
+mkdir -p ~/Desktop/backups
+chmod 777 ~/Desktop/backups
+log "Backups folder created on Desktop"
+
+cp /etc/group ~/Desktop/backups/
+cp /etc/passwd ~/Desktop/backups/
+log "etc/group and etc/passwd files backed up"
 
 echo "Please Copy Paste the list of Authorized Users from the ReadME (Hit Ctrl-D when finished)"
 while read line
@@ -40,7 +58,7 @@ do
 	while true; do
      	read -p "Would you like to delete user $i? [y/n]" yn
 	case $yn in
-		[Yy]* ) userdel "$i"; break;;
+		[Yy]* ) userdel "$i"; log "user $i has been deleted."; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
@@ -49,7 +67,7 @@ else
 	while true; do
 	read -p "Would you like to add user $i? [y/n]" yn
 	case $yn in 
-		[Yy]* ) useradd "$i"; chage -d 0 "$i"; break;;
+		[Yy]* ) useradd "$i"; chage -d 0 "$i"; log "user $i has been added."; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
@@ -57,24 +75,39 @@ done
 fi
 done
 
-for i in "$authAdmins"
+for i in `echo $authAdmins`
 do
-	usermod -aG sudo $i
-done
-for i in "$authUsers"
-do
-	gpasswd -d $i sudo
+	while true; do
+	read -p "Would you like to make user $i an admin? [y/n]" yn
+	case $yn in
+		[Yy]* ) gpasswd -a $i sudo; gpasswd -a $i adm; gpasswd -a $i lpadmin; gpasswd -a $i sambashare; log "user $i is now an admin"; break;;
+		[Nn]* ) break;;
+		* ) echo "Please answer y or n only.";;
+	esac
+	done
 done
 
-echo "CAUTION: Make sure to not delete the autologin user if you don't have to."
-echo "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
+for i in "$authUsers"
+do
+	while true; do
+	read -p "Would you like to make user $i a normal user? [y/n]" yn
+	case $yn in
+		[Yy]* ) gpasswd -d $i sudo; gpasswd -d $i adm; gpasswd -d $i lpadmin; gpasswd -d $i sambashare; gpasswd -d $i root; log "user $i is now a standard user"; break;;
+		[Nn]* ) break;;
+		* ) echo "Please answer y or n only.";;
+	esac
+	done
+done
+
+log "CAUTION: Make sure to not change the password of the autologin user if you don't have to."
+log "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
 
 for i in `echo $allAuthUsers`
 do
 	while true; do
 		read -p "Would you like to change the password of user $i? [y/n]" yn
 		case $yn in
-			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; break;;
+			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; log "Password of user $i has been changed."; break;;
 			[Nn]* ) break;;
 			* ) echo "Please answer y or n only.";;
 		esac
