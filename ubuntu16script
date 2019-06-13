@@ -65,8 +65,8 @@ do
 done
 else
 	while true; do
-	read -p "Would you like to add user $unwantedUser? [y/n]" yn
-	case $yn in 
+	read -p "Would you like to add user $unwantedUser? [y/n]" yn1
+	case $yn1 in 
 		[Yy]* ) useradd "$unwantedUser"; chage -d 0 "$i"; log "user $unwantedUser has been added."; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
@@ -78,8 +78,8 @@ done
 for admin in `echo $authAdmins`
 do
 	while true; do
-	read -p "Would you like to make user $admin an admin? [y/n]" yn
-	case $yn in
+	read -p "Would you like to make user $admin an admin? [y/n]" yn2
+	case $yn2 in
 		[Yy]* ) gpasswd -a $admin sudo; gpasswd -a $admin adm; gpasswd -a $admin lpadmin; gpasswd -a $admin sambashare; log "user $admin is now an admin"; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
@@ -87,11 +87,11 @@ do
 	done
 done
 
-for user in "$authUsers"
+for user in `echo $authUsers`
 do
 	while true; do
-	read -p "Would you like to make user $user a normal user? [y/n]" yn
-	case $yn in
+	read -p "Would you like to make user $user a normal user? [y/n]" yn3
+	case $yn3 in
 		[Yy]* ) gpasswd -d $user sudo; gpasswd -d $user adm; gpasswd -d $user lpadmin; gpasswd -d $user sambashare; gpasswd -d $user root; log "user $user is now a standard user"; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
@@ -105,8 +105,8 @@ log "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
 for secureUser in `echo $allAuthUsers`
 do
 	while true; do
-		read -p "Would you like to change the password of user $secureUser? [y/n]" yn
-		case $yn in
+		read -p "Would you like to change the password of user $secureUser? [y/n]" yn4
+		case $yn4 in
 			[Yy]* ) echo "$secureUser:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; log "Password of user $secureUser has been changed."; break;;
 			[Nn]* ) break;;
 			* ) echo "Please answer y or n only.";;
