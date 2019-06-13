@@ -50,24 +50,24 @@ allAuthUsers=( "${authUsers[@]}" "${authAdmins[@]}" )
 
 unwantedUsers=`echo  ${allAuthUsers[@]} ${currentUsers[@]} | tr ' ' '\n' | sort | uniq -u`
 
-for i in `echo $unwantedUsers`
+for unwantedUser in `echo $unwantedUsers`
 do
 	isUser=false
-	case "${currentUsers[@]}" in  *"$i"*) isUser=true ;; esac
+	case "${currentUsers[@]}" in  *"$unwantedUser"*) isUser=true ;; esac
 	if [ "$isUser" = true ]; then
 	while true; do
-     	read -p "Would you like to delete user $i? [y/n]" yn
+     	read -p "Would you like to delete user $unwantedUser? [y/n]" yn
 	case $yn in
-		[Yy]* ) userdel "$i"; log "user $i has been deleted."; break;;
+		[Yy]* ) userdel "$unwantedUser"; log "user $unwantedUser has been deleted."; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
 done
 else
 	while true; do
-	read -p "Would you like to add user $i? [y/n]" yn
+	read -p "Would you like to add user $unwantedUser? [y/n]" yn
 	case $yn in 
-		[Yy]* ) useradd "$i"; chage -d 0 "$i"; log "user $i has been added."; break;;
+		[Yy]* ) useradd "$unwantedUser"; chage -d 0 "$i"; log "user $unwantedUser has been added."; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
@@ -75,24 +75,24 @@ done
 fi
 done
 
-for i in `echo $authAdmins`
+for admin in `echo $authAdmins`
 do
 	while true; do
-	read -p "Would you like to make user $i an admin? [y/n]" yn
+	read -p "Would you like to make user $admin an admin? [y/n]" yn
 	case $yn in
-		[Yy]* ) gpasswd -a $i sudo; gpasswd -a $i adm; gpasswd -a $i lpadmin; gpasswd -a $i sambashare; log "user $i is now an admin"; break;;
+		[Yy]* ) gpasswd -a $admin sudo; gpasswd -a $admin adm; gpasswd -a $admin lpadmin; gpasswd -a $admin sambashare; log "user $admin is now an admin"; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
 	done
 done
 
-for i in "$authUsers"
+for user in "$authUsers"
 do
 	while true; do
-	read -p "Would you like to make user $i a normal user? [y/n]" yn
+	read -p "Would you like to make user $user a normal user? [y/n]" yn
 	case $yn in
-		[Yy]* ) gpasswd -d $i sudo; gpasswd -d $i adm; gpasswd -d $i lpadmin; gpasswd -d $i sambashare; gpasswd -d $i root; log "user $i is now a standard user"; break;;
+		[Yy]* ) gpasswd -d $user sudo; gpasswd -d $user adm; gpasswd -d $user lpadmin; gpasswd -d $user sambashare; gpasswd -d $user root; log "user $user is now a standard user"; break;;
 		[Nn]* ) break;;
 		* ) echo "Please answer y or n only.";;
 	esac
@@ -102,12 +102,12 @@ done
 log "CAUTION: Make sure to not change the password of the autologin user if you don't have to."
 log "NOTE: All Passwords are changed to Cyb3rPatr!0tPa%%WORD2016"
 
-for i in `echo $allAuthUsers`
+for secureUser in `echo $allAuthUsers`
 do
 	while true; do
-		read -p "Would you like to change the password of user $i? [y/n]" yn
+		read -p "Would you like to change the password of user $secureUser? [y/n]" yn
 		case $yn in
-			[Yy]* ) echo "$i:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; log "Password of user $i has been changed."; break;;
+			[Yy]* ) echo "$secureUser:Cyb3rPatr!0tPa%%W0RD2016" | chpasswd; log "Password of user $secureUser has been changed."; break;;
 			[Nn]* ) break;;
 			* ) echo "Please answer y or n only.";;
 		esac
