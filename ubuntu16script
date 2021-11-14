@@ -16,10 +16,6 @@ log()
 echo > ~/Desktop/Script.log
 chmod 777 ~/Desktop/Script.log
 
-log "Welcome to Team Morpheus' CyberPatriot XI Ubuntu 16 Script. This script can only be used by Team Morpheus."
-log "Please Make sure that you have done the following before running this script:"
-log "1) Read the README THOROUGHLY"
-log "2) Read ALL Forensics Questions"
 read -p "<Press Enter To Start The Script>"
 
 mkdir -p ~/Desktop/backups
